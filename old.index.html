@@ -3,7 +3,6 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
 <script>
-  var socket = io.connect('http://localhost:3000'); 
   var M = {
     21: 1,
     22: 1,
@@ -22,35 +21,79 @@
     47: 1,
     48: 1
   };
+  if (typeof io != 'undefined') {
+      var socket = io.connect('http://localhost:3000'); 
+
   socket.on('midimessage', function (data) {
     M[data[1]] = data[2] / 127;
+    //console.log(M[data[1]]);
   });
+
+  }
 </script>
 <style>
+  body {
+    margin: 0;
+    overflow: hidden;
+  }
   svg {
-  background-color: #444444;
+  background-color: #222244;
   } 
   path {
-    transition: fill 500ms;
+    stroke: black;
+    stroke-width: 10px;
   }
 </style>
 <script>
-  (function($, window, document) {
-        // The $ is now locally scoped 
-    $(function() {
-      var fillShape = function() {
-        setTimeout(function() {
-          var x = Math.ceil(Math.random() * 13);
-          var y = Math.ceil(M[24] * 8);
-          var h = Math.ceil(360 * M[22]);
-          var s = Math.ceil(Math.random() * 100 * M[23]);
-          var l = Math.ceil(Math.random() * 100);
-          $('#shape'+x+'_'+y).css('fill', 'hsl('+h+','+s+'%,'+l+'%)');
-          fillShape();
-        }, Math.floor(500 * M[21]));
+var hsl_string = function(hue, saturation, lightness, alpha) {
+  hue = hue || 0;
+  saturation = saturation || 100;
+  lightness = lightness || 50;
+  alpha = alpha || 1
+  return "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)";
+}
 
-      };
-      fillShape();
+var Shapes = {};
+
+function Shape(shape_id) {
+  this.shape_id = shape_id;
+}
+
+  (function($, window, document) {
+Shape.prototype.colorShift = function(transition_ms) {
+  var hue = Math.floor(Math.random() * M[24] * 40 + (M[21] * 360));
+  var saturation = Math.floor(Math.random() * 90) + 10;
+  var lightness = Math.floor(Math.random() * 90) + 10;
+  var alpha = Math.random();
+  var target = $('#' + this.shape_id);
+  target.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function() {
+    target.css('transition', 'fill ' + transition_ms + 'ms');
+    target.css('fill', 'black');
+
+  });
+  target.css('transition', 'fill 1ms');
+  //target.css('opacity', alpha);
+  target.css('fill', hsl_string(hue, saturation, lightness, alpha));
+}
+Shape.prototype.colorCycle = function() {
+  var shape = this;
+  var transition_ms = Math.floor(Math.random() * 4000) + M[23] * 4000;
+  var cycle_ms = transition_ms - (M[22] * 3500);
+  timeout = setTimeout(function() {
+    shape.colorShift(transition_ms);
+    shape.colorCycle();
+  }, cycle_ms);
+}
+    $(function() {
+      $('path').each(function() {
+        var shape_id = $(this).attr('id');
+        var initial_ms = Math.floor(Math.random() * 4000) + 4000;
+        Shapes[shape_id] = new Shape(shape_id);
+
+        Shapes[shape_id].colorShift(initial_ms);
+        Shapes[shape_id].colorCycle();
+      })
+
     });
 
 

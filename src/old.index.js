@@ -33,7 +33,7 @@ input.on('message', function(deltaTime, message) {
   io.emit('midimessage', message);
 });
 
-input.openPort(0);
+//input.openPort(0);
 // Open the first available input port.
 //input.openVirtualPort('yourmom');
 
