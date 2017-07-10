@@ -1,4 +1,5 @@
 var path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -7,6 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/dist/'
   },
+  plugins: [new HtmlWebpackPlugin()],
   module: {
     rules: [
     {
