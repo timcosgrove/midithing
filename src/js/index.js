@@ -1,8 +1,8 @@
 import SVG from 'svg.js';
 import tinycolor from 'tinycolor2';
 
-import './style.css';
-var gridSVG = require("./grid.svg");
+import '../css/style.css';
+var gridSVG = require("../images/grid.svg");
 
 // This just poops the SVG onto the page.
 function component() {
@@ -28,7 +28,7 @@ function Shape(shape_id) {
 }
 
 Shape.prototype.colorShift = function(transition_ms) {
-  var hue = Math.floor((Math.random() * 40 - 20) + (90));
+  var hue = Math.floor((Math.random() * 40 - 20) + (0));
   var saturation = Math.floor(Math.random() * 90) + 10;
   var lightness = Math.floor(Math.random() * 90) + 10;
   var alpha = Math.random();

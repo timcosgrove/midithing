@@ -2,10 +2,10 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/js/index.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/js'),
     publicPath: '/dist/'
   },
   devServer: {
@@ -13,7 +13,10 @@ module.exports = {
     compress: true,
     port: 9000
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [new HtmlWebpackPlugin({
+      title: 'OMG Glass',
+      filename: '../index.html'
+    })],
   module: {
     rules: [
     {
