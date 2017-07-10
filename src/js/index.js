@@ -22,26 +22,56 @@ var hsl_vals_to_hex = function(hue, saturation, lightness, alpha) {
 }
 
 // Super basic class.
-function Shape(shape_id) {
+function Shape(shape_id, active_pattern) {
   this.shape_id = shape_id;
   this.shape_path = SVG.get(this.shape_id);
+  this.active_pattern = active_pattern;
 }
 
-Shape.prototype.colorShift = function(transition_ms) {
+Shape.prototype.activatePattern = function(pattern) {
+  if (pattern) {
+    this.active_pattern = pattern;
+  }
+  this.active_pattern.call(this);
+}
+
+var Patterns = {};
+
+Patterns.basic = function() {
+  var shape = this;
+  // Time to fade from color to black.
+  var transition_ms = Math.floor(Math.random() * 2000) + 2000;
+  // time before repeating the next cycle.
+  var cycle_ms = transition_ms + Math.floor(Math.random() * 1000);
+
+  // randomish HSLa values.
+  var hue = Math.floor((Math.random() * 40 - 20) + (180));
+  var saturation = Math.floor(Math.random() * 90) + 10;
+  var lightness = Math.floor(Math.random() * 90) + 10;
+  var alpha = Math.random();
+  shape.shape_path.fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms).fill('#000000');    
+
+  var timeout = setTimeout(function() {
+    shape.active_pattern.call(shape);
+  }, cycle_ms);
+};
+
+Patterns.basicRed = function() {
+  var shape = this;
+  // Time to fade from color to black.
+  var transition_ms = Math.floor(Math.random() * 2000) + 2000;
+  // time before repeating the next cycle.
+  var cycle_ms = transition_ms + Math.floor(Math.random() * 1000);
+
+  // randomish HSLa values.
   var hue = Math.floor((Math.random() * 40 - 20) + (0));
   var saturation = Math.floor(Math.random() * 90) + 10;
   var lightness = Math.floor(Math.random() * 90) + 10;
   var alpha = Math.random();
-  this.shape_path.fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms).fill('#000000');
+  shape.shape_path.fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms).fill('#000000');    
 
-};
-Shape.prototype.colorCycle = function() {
-  var shape = this;
-  var transition_ms = Math.floor(Math.random() * 2000) + 2000;
-  var cycle_ms = transition_ms + Math.floor(Math.random() * 1000);
   var timeout = setTimeout(function() {
-    shape.colorShift(transition_ms);
-    shape.colorCycle();
+    shape.active_pattern.call(shape);
   }, cycle_ms);
 };
 
@@ -51,11 +81,7 @@ var paths = document.getElementsByTagName('path');
 for (var i = 0; i < paths.length; i++) {
   var initial_ms = Math.floor(Math.random() * 3000) + 3000;
   var shape_id = paths[i].id;
-  Shapes[shape_id] = new Shape(shape_id);
-  Shapes[shape_id].colorShift(initial_ms);
-  Shapes[shape_id].colorCycle();
+  var shape = Shapes[shape_id] = new Shape(shape_id, Patterns.basic);
+  shape.activatePattern();
 }
-
-
-
 
