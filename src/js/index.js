@@ -28,14 +28,19 @@ function Shape(shape_id, active_pattern) {
   this.active_pattern = active_pattern;
 }
 
-Shape.prototype.activatePattern = function(pattern) {
-  if (pattern) {
-    this.active_pattern = pattern;
-  }
+Shape.prototype.activate = function() {
   this.active_pattern.call(this);
 }
 
-var Patterns = {};
+Shape.prototype.activatePattern = function(pattern) {
+  if (this.timeout) {
+    window.clearTimeout(this.timeout);
+  }
+  this.active_pattern = pattern;
+  this.activate();
+}
+
+var Patterns = window.Patterns = {};
 
 Patterns.basic = function() {
   var shape = this;
@@ -49,9 +54,8 @@ Patterns.basic = function() {
   var saturation = Math.floor(Math.random() * 90) + 10;
   var lightness = Math.floor(Math.random() * 90) + 10;
   var alpha = Math.random();
-  shape.shape_path.fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms).fill('#000000');    
-
-  var timeout = setTimeout(function() {
+  shape.shape_path.finish().fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms).fill('#000000');    
+  shape.timeout = setTimeout(function() {
     shape.active_pattern.call(shape);
   }, cycle_ms);
 };
@@ -68,20 +72,36 @@ Patterns.basicRed = function() {
   var saturation = Math.floor(Math.random() * 90) + 10;
   var lightness = Math.floor(Math.random() * 90) + 10;
   var alpha = Math.random();
-  shape.shape_path.fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms).fill('#000000');    
-
-  var timeout = setTimeout(function() {
+  shape.shape_path.finish().fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms).fill('#000000');    
+  shape.timeout = setTimeout(function() {
     shape.active_pattern.call(shape);
   }, cycle_ms);
 };
 
-var Shapes = {};
+Patterns.throb = function() {
+  var shape = this;
+    // Time to fade from color to black.
+  var transition_ms = Math.floor(Math.random() * 5000) + 1000;
+  // time before repeating the next cycle.
+  var transition_ms2 = Math.floor(Math.random() * 5000) + 1000;
+    // randomish HSLa values.
+  var hue = Math.floor((Math.random() * 40 - 20) + (Math.floor(Math.random() * 360)));
+  var saturation = Math.floor(Math.random() * 90) + 10;
+  var lightness = Math.floor(Math.random() * 90) + 10;
+  var alpha = Math.random();
+  var hue2 = Math.floor((Math.random() * 40 - 20) + (Math.floor(Math.random() * 360)));
+  var saturation2 = Math.floor(Math.random() * 90) + 10;
+  var lightness2 = Math.floor(Math.random() * 90) + 10;
+  var alpha2 = Math.random();
+  shape.shape_path.finish().animate(transition_ms).fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms2).fill(hsl_vals_to_hex(hue2, saturation2, lightness2, alpha2)).loop(null, true);    
+};
+
+var Shapes = window.Shapes = {};
 
 var paths = document.getElementsByTagName('path');
 for (var i = 0; i < paths.length; i++) {
-  var initial_ms = Math.floor(Math.random() * 3000) + 3000;
   var shape_id = paths[i].id;
   var shape = Shapes[shape_id] = new Shape(shape_id, Patterns.basic);
-  shape.activatePattern();
+  shape.activate();
 }
 
