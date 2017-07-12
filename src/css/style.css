@@ -3,9 +3,9 @@
     overflow: hidden;
   }
   svg {
-  background-color: #222244;
+  background-color: #000000;
   } 
   path {
     stroke: black;
-    stroke-width: 10px;
+    stroke-width: 2px;
   }

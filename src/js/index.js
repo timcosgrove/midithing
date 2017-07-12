@@ -96,12 +96,76 @@ Patterns.throb = function() {
   shape.shape_path.finish().animate(transition_ms).fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms2).fill(hsl_vals_to_hex(hue2, saturation2, lightness2, alpha2)).loop(null, true);    
 };
 
+Patterns.red_fade = function() {
+  var shape = this;
+    // Time to fade from color to black.
+  var transition_ms = 1500;
+    // randomish HSLa values.
+  var hue = 10, saturation = 100, lightness = 50, alpha = 1;
+  shape.shape_path.finish().fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms, '>').fill('#000000');    
+};
+
+Patterns.blue_fade = function() {
+  var shape = this;
+    // Time to fade from color to black.
+  var transition_ms = 2000;
+    // randomish HSLa values.
+  var hue = 197, saturation = 100, lightness = 50, alpha = 1;
+  shape.shape_path.finish().fill(hsl_vals_to_hex(hue, saturation, lightness, alpha)).animate(transition_ms, '>').fill('#000000');    
+};
+
+var Groups = window.Groups = {};
+
+
 var Shapes = window.Shapes = {};
 
 var paths = document.getElementsByTagName('path');
 for (var i = 0; i < paths.length; i++) {
   var shape_id = paths[i].id;
-  var shape = Shapes[shape_id] = new Shape(shape_id, Patterns.basic);
+  var shape = Shapes[shape_id] = new Shape(shape_id, function(){});
   shape.activate();
 }
+
+var Seq = window.Seq = {};
+
+var getRandomInt = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+Seq.colLine = function(col, pattern) {
+  col = col || getRandomInt(1, 13);
+  var rows = 8;
+  var lineSpeed = getRandomInt(75, 200);
+  var lightSquare = function(row) {
+    var shape = 'shape' + col + '_' + row;
+    Shapes[shape].activatePattern(pattern);
+    if (row > 0) {
+      var nextSquare = window.setTimeout(lightSquare, lineSpeed, row - 1);
+    }
+  };
+  lightSquare(rows);
+}
+
+Seq.rowLine = function(row, pattern) {
+  row = row || getRandomInt(1, 8);
+  var cols = 13;
+  var lineSpeed = getRandomInt(25, 100);
+  var lightSquare = function(col) {
+    var shape = 'shape' + col + '_' + row;
+    Shapes[shape].activatePattern(pattern);
+    if (col > 0) {
+      var nextSquare = window.setTimeout(lightSquare, lineSpeed, col - 1);
+    }
+  };
+  lightSquare(cols);
+}
+
+
+Seq.loop = function(seq) {
+  seq.call();
+  var interval = Math.floor(Math.random() * 500);
+  var next = setTimeout(Seq.loop, interval, seq);
+}
+Seq.loop(function() {Seq.rowLine(null, Patterns.blue_fade)});
+Seq.loop(function() {Seq.colLine(null, Patterns.red_fade)});
 
