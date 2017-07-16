@@ -8,6 +8,12 @@ module.exports = {
     path: path.resolve(__dirname, 'dist/js'),
     publicPath: '/dist/'
   },
+  resolve: {
+    modules: [
+      path.resolve(__dirname, "src"),
+      path.resolve('node_modules')
+    ]
+  },
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
