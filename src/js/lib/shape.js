@@ -48,10 +48,11 @@ Shape.prototype.activatePattern = function(pattern) {
 //
 Shape.prototype.setPattern = function(options) {
   return function() {
-    var current, i, j;
-    var shape_path = this.shape_path;
+    var current, i, j, k;
+    var shape_path = this.shape_path.clone();
     var currentFX;
     var method;
+    var args;
     // Normalize shape
     shape_path.finish().opacity(0).fill('#000000').scale(1.0, 1.0);
     for (i = 0; i < options.length; i++) {
@@ -64,8 +65,20 @@ Shape.prototype.setPattern = function(options) {
       }
       for (j = 0; j < current.methods.length; j++) {
         method = current.methods[j];
-        eval("currentFX." + method[0] + "(" + (method[1] ? (method[1].join(', ')) : null) + ");");
+        args = [];
+        for (k = 0; k < method[1].length; k++) {
+          if (typeof method[1][k] == 'string') {
+            args.push('"' + method[1][k].replace(/"/g, '\"') + '"');
+          }
+          else {
+            args.push(method[1][k]);
+          }
+        }
+        eval("currentFX." + method[0] + "(" + (args.join(',')) + ");");
       }
     }
+    currentFX.afterAll(function() {
+      this.remove();
+    })
   }
 }

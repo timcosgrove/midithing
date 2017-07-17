@@ -1,11 +1,6 @@
 'use strict'
 
 import Utils from 'js/lib/utils.js';
-
-var kitty = require("images/kitty.jpg");
-var pinktile = require("images/pinktile.jpg");
-var pinktile_invert = require("images/pinktile_invert.jpg");
-
 var Patterns = {};
 
 Patterns.basic = function() {
@@ -66,9 +61,8 @@ Patterns.red_fade = (function() {
   var pattern = [
     {
       methods: [
-        ['scale', [0.8, 0.8]],
         ['opacity', [1]],
-        ['fill', ["'" + Utils.hsl_vals_to_hex(hue, saturation - 90, lightness) + "'"]]
+        ['fill', [Utils.hsl_vals_to_hex(hue, saturation, lightness)]]
       ]
     },
     {
@@ -77,44 +71,127 @@ Patterns.red_fade = (function() {
         ease: '<'
       },
       methods: [
-        ['scale', [1.0, 1.0]],
         ['opacity', [0]],
-        ['fill', ["'" + Utils.hsl_vals_to_hex(hue, saturation, lightness) + "'"]]
-
+        ['scale', [0.7, 0.7]]
       ]
     }
   ];
   return pattern;
 })();
 
-Patterns.blue_fade = function() {
-  var shape = this;
-    // Time to fade from color to black.
-  var transition_ms = 4000;
-    // randomish HSLa values.
+Patterns.blue_fade = (function() {
+  // Time to fade from color to black.
+  var transition_ms = 1000;
+  // randomish HSLa values.
   var hue = 197, saturation = 100, lightness = 50;
-  shape.shape_path.finish().opacity(1).fill(Utils.hsl_vals_to_hex(hue, saturation, lightness)).animate(transition_ms, '>').opacity(0);
-};
+  var pattern = [
+    {
+      methods: [
+        ['opacity', [0]],
+        ['fill', [Utils.hsl_vals_to_hex(hue, 10, lightness)]]
+      ]
+    },
+    {
+      animate: {
+        duration: 300,
+        ease: '>'
+      },
+      methods: [
+        ['opacity', [1]],
+        ['fill', [Utils.hsl_vals_to_hex(hue, saturation, lightness)]]
+      ]
+    },
+    {
+      animate: {
+        duration: transition_ms,
+        ease: '<'
+      },
+      methods: [
+        ['opacity', [0]],
+        ['scale', [0.5, 0.5]],
+        ['fill', [Utils.hsl_vals_to_hex(hue, 10, lightness)]]
+      ]
+    }
+  ];
+  return pattern;
+})();
 
-Patterns.kitty_fade = function() {
-  var shape = this;
-    // Time to fade from color to black.
-  var transition_ms = 500;
-  shape.shape_path.finish().opacity(1).fill(kitty).animate(transition_ms, '>').opacity(0);
-};
-
-Patterns.pinktile_fade = function() {
-  var shape = this;
-    // Time to fade from color to black.
+Patterns.kitty_fade = (function() {
+  var kitty = require("images/kitty.jpg");
+  // Time to fade from color to black.
   var transition_ms = 1000;
-  shape.shape_path.finish().opacity(1).fill(pinktile).animate(transition_ms, '>').opacity(0);
-};
+  // randomish HSLa values.
+  var hue = 10, saturation = 100, lightness = 50;
+  var pattern = [
+    {
+      methods: [
+        ['opacity', [1]],
+        ['fill', [kitty]]
+      ]
+    },
+    {
+      animate: {
+        duration: transition_ms,
+        ease: '<'
+      },
+      methods: [
+        ['opacity', [0]]
+      ]
+    }
+  ];
+  return pattern;
+})();
 
-Patterns.pinktile_invert_fade = function() {
-  var shape = this;
-    // Time to fade from color to black.
+Patterns.pinktile_fade = (function() {
+  var pinktile = require("images/pinktile.jpg");
+  // Time to fade from color to black.
   var transition_ms = 1000;
-  shape.shape_path.finish().opacity(1).fill(pinktile_invert).animate(transition_ms, '>').opacity(0);
-};
+  // randomish HSLa values.
+  var hue = 10, saturation = 100, lightness = 50;
+  var pattern = [
+    {
+      methods: [
+        ['opacity', [0.5]],
+        ['fill', [pinktile]]
+      ]
+    },
+    {
+      animate: {
+        duration: transition_ms,
+        ease: '<'
+      },
+      methods: [
+        ['opacity', [0]]
+      ]
+    }
+  ];
+  return pattern;
+})();
+
+Patterns.pinktile_invert_fade = (function() {
+  var pinktile_invert = require("images/pinktile_invert.jpg");
+  // Time to fade from color to black.
+  var transition_ms = 1000;
+  // randomish HSLa values.
+  var hue = 10, saturation = 100, lightness = 50;
+  var pattern = [
+    {
+      methods: [
+        ['opacity', [1]],
+        ['fill', [pinktile_invert]]
+      ]
+    },
+    {
+      animate: {
+        duration: transition_ms,
+        ease: '<'
+      },
+      methods: [
+        ['opacity', [0]]
+      ]
+    }
+  ];
+  return pattern;
+})();
 
 export default Patterns;
