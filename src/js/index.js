@@ -19,7 +19,7 @@ function component() {
 document.body.appendChild(component());
 
 Shapes.initialize();
-//Seq.loop(function() {Seq.wave(Patterns.red_fade, null, Utils.getRandomInt(0,1))});
+Seq.loop(function() {Seq.wave(Patterns.red_fade, null, Utils.getRandomInt(0,1))});
 Seq.loop(function() {Seq.wave(Patterns.blue_fade, null, Utils.getRandomInt(0,1))});
 //Seq.loop(function() {Seq.all(Patterns.blue_fade)});
-//Seq.loop(function() {Seq.rowLine(Patterns.pinktile_fade)});
+Seq.loop(function() {Seq.rowLine(Patterns.pinktile_fade)});
