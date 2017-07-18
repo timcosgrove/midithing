@@ -22,3 +22,4 @@ Seq.loop(() => { Seq.wave(Patterns.redFade, null, Utils.getRandomInt(0, 1)); });
 Seq.loop(() => { Seq.wave(Patterns.blueGreyFade, null, Utils.getRandomInt(0, 1), 'troughLong'); });
 // Seq.loop(function() {Seq.all(Patterns.blueFade)});
 // Seq.loop(function() {Seq.rowLine(Patterns.pinktileFade)});
+
