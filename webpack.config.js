@@ -26,6 +26,15 @@ module.exports = {
   module: {
     rules: [
     {
+      test: /\.jsx?$/, // both .js and .jsx
+      loader: 'eslint-loader',
+      include: path.resolve(__dirname, 'src'),
+      enforce: 'pre',
+      options: {
+        fix: true,
+      },
+    },
+    {
       test: /\.css$/,
       use: [
       'style-loader',

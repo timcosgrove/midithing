@@ -1,29 +1,25 @@
-'use strict'
-
 import SVG from 'svg.js';
 
-export default Shape;
-
 // Super basic class.
-function Shape(shape_id, active_pattern) {
-  this.shape_id = shape_id;
-  this.shape_path = SVG.get(this.shape_id);
-  this.active_pattern = active_pattern;
+function Shape(shapeId, activePattern) {
+  this.shapeId = shapeId;
+  this.shapePath = SVG.get(this.shapeId);
+  this.activePattern = activePattern;
 }
 
-Shape.prototype.activate = function() {
-  if (typeof this.active_pattern == 'function') {
-    this.active_pattern.call(this);
+Shape.prototype.activate = function activate() {
+  if (typeof this.activePattern === 'function') {
+    this.activePattern.call(this);
   }
-}
+};
 
-Shape.prototype.activatePattern = function(pattern) {
+Shape.prototype.activatePattern = function activatePattertn(pattern) {
   if (this.timeout) {
     window.clearTimeout(this.timeout);
   }
-  this.active_pattern = pattern;
+  this.activePattern = pattern;
   this.activate();
-}
+};
 
 // options is an array of objects of the form
 // [
@@ -46,39 +42,49 @@ Shape.prototype.activatePattern = function(pattern) {
 //   }
 // ]
 //
-Shape.prototype.setPattern = function(options) {
-  return function() {
-    var current, i, j, k;
-    var shape_path = this.shape_path.clone();
-    var currentFX;
-    var method;
-    var args;
+Shape.prototype.setPattern = function setPattern(options) {
+  return function thisPattern() {
+    let current;
+    let i;
+    let j;
+    let k;
+    const shapePath = this.shapePath.clone();
+    let currentFX;
+    let method;
+    let args;
     // Normalize shape
-    shape_path.finish().opacity(0).fill('#000000').scale(1.0, 1.0);
-    for (i = 0; i < options.length; i++) {
+    shapePath.finish()
+      .opacity(0)
+      .fill('#000000')
+      .scale(1.0, 1.0)
+      .stroke({ color: '#000000', width: 2 });
+    for (i = 0; i < options.length; i += 1) {
       current = options[i];
       if (current.animate) {
-        currentFX = shape_path.animate(current.animate);
+        currentFX = shapePath.animate(current.animate);
+      } else {
+        currentFX = shapePath;
       }
-      else {
-        currentFX = shape_path;
-      }
-      for (j = 0; j < current.methods.length; j++) {
+      for (j = 0; j < current.methods.length; j += 1) {
         method = current.methods[j];
         args = [];
-        for (k = 0; k < method[1].length; k++) {
-          if (typeof method[1][k] == 'string') {
-            args.push('"' + method[1][k].replace(/"/g, '\"') + '"');
-          }
-          else {
+        for (k = 0; k < method[1].length; k += 1) {
+          if (typeof method[1][k] === 'string') {
+            args.push(`"${method[1][k].replace(/"/g, '"')}"`);
+          } else {
             args.push(method[1][k]);
           }
         }
-        eval("currentFX." + method[0] + "(" + (args.join(',')) + ");");
+        /* eslint-disable no-eval */
+        eval(`currentFX.${method[0]}(${args.join(',')});`);
+        /* eslint-enable no-eval */
       }
     }
-    currentFX.afterAll(function() {
+    currentFX.afterAll(function removeClone() {
       this.remove();
-    })
-  }
-}
+    });
+  };
+};
+
+export default Shape;
+

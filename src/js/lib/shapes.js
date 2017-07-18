@@ -1,15 +1,15 @@
-'use strict'
+import Shape from 'js/lib/shape';
 
-import Shape from 'js/lib/shape.js';
+const Shapes = {};
+window.Shapes = {};
 
-var Shapes = window.Shapes = {};
-
-Shapes.initialize = function() {
-	var paths = document.getElementsByTagName('path');
-  for (var i = 0; i < paths.length; i++) {
-    var shape_id = paths[i].id;
-    var shape = Shapes[shape_id] = new Shape(shape_id, function(){});
-    shape.shape_path.opacity(0);
+Shapes.initialize = function initialize() {
+  const paths = document.getElementsByTagName('path');
+  for (let i = 0; i < paths.length; i += 1) {
+    const shapeId = paths[i].id;
+    Shapes[shapeId] = new Shape(shapeId, (() => {}));
+    const shape = Shapes[shapeId];
+    shape.shapePath.opacity(0);
   }
 };
 

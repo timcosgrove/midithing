@@ -1,197 +1,240 @@
-'use strict'
+import Utils from 'js/lib/utils';
 
-import Utils from 'js/lib/utils.js';
-var Patterns = {};
+const kitty = require('images/kitty.jpg');
+const pinktile = require('images/pinktile.jpg');
+const pinktileInvert = require('images/pinktile_invert.jpg');
 
-Patterns.basic = function() {
-  var shape = this;
+const Patterns = {};
+
+Patterns.basic = function basic() {
+  const shape = this;
   // Time to fade from color to black.
-  var transition_ms = Math.floor(Math.random() * 2000) + 2000;
+  const transitionMS = Math.floor(Math.random() * 2000) + 2000;
   // time before repeating the next cycle.
-  var cycle_ms = transition_ms + Math.floor(Math.random() * 1000);
+  const cycleMS = transitionMS + Math.floor(Math.random() * 1000);
 
   // randomish HSLa values.
-  var hue = Math.floor((Math.random() * 40 - 20) + (180));
-  var saturation = Math.floor(Math.random() * 90) + 10;
-  var lightness = Math.floor(Math.random() * 90) + 10;
-  shape.shape_path.finish().fill(Utils.hsl_vals_to_hex(hue, saturation, lightness)).animate(transition_ms).fill('#000000');
-  shape.timeout = setTimeout(function() {
+  const hue = Math.floor(((Math.random() * 40) - 20) + (180));
+  const saturation = Math.floor(Math.random() * 90) + 10;
+  const lightness = Math.floor(Math.random() * 90) + 10;
+  shape.shape_path.finish().fill(Utils.hslValsToHex(hue, saturation, lightness)).animate(transitionMS).fill('#000000');
+  shape.timeout = setTimeout(() => {
     shape.active_pattern.call(shape);
-  }, cycle_ms);
+  }, cycleMS);
 };
 
-Patterns.basicRed = function() {
-  var shape = this;
+Patterns.basicRed = function basicRed() {
+  const shape = this;
   // Time to fade from color to black.
-  var transition_ms = Math.floor(Math.random() * 2000) + 2000;
+  const transitionMS = Math.floor(Math.random() * 2000) + 2000;
   // time before repeating the next cycle.
-  var cycle_ms = transition_ms + Math.floor(Math.random() * 1000);
+  const cycleMS = transitionMS + Math.floor(Math.random() * 1000);
 
   // randomish HSLa values.
-  var hue = Math.floor((Math.random() * 40 - 20) + (0));
-  var saturation = Math.floor(Math.random() * 90) + 10;
-  var lightness = Math.floor(Math.random() * 90) + 10;
-  shape.shape_path.finish().fill(Utils.hsl_vals_to_hex(hue, saturation, lightness)).animate(transition_ms).fill('#000000');
-  shape.timeout = setTimeout(function() {
+  const hue = Math.floor(((Math.random() * 40) - 20) + (0));
+  const saturation = Math.floor(Math.random() * 90) + 10;
+  const lightness = Math.floor(Math.random() * 90) + 10;
+  shape.shape_path.finish().fill(Utils.hslValsToHex(hue, saturation, lightness)).animate(transitionMS).fill('#000000');
+  shape.timeout = setTimeout(() => {
     shape.active_pattern.call(shape);
-  }, cycle_ms);
+  }, cycleMS);
 };
 
-Patterns.throb = function() {
-  var shape = this;
-    // Time to fade from color to black.
-  var transition_ms = Math.floor(Math.random() * 5000) + 1000;
-  // time before repeating the next cycle.
-  var transition_ms2 = Math.floor(Math.random() * 5000) + 1000;
-    // randomish HSLa values.
-  var hue = Math.floor((Math.random() * 40 - 20) + (Math.floor(Math.random() * 360)));
-  var saturation = Math.floor(Math.random() * 90) + 10;
-  var lightness = Math.floor(Math.random() * 90) + 10;
-  var hue2 = Math.floor((Math.random() * 40 - 20) + (Math.floor(Math.random() * 360)));
-  var saturation2 = Math.floor(Math.random() * 90) + 10;
-  var lightness2 = Math.floor(Math.random() * 90) + 10;
-  shape.shape_path.finish().animate(transition_ms).fill(Utils.hsl_vals_to_hex(hue, saturation, lightness)).animate(transition_ms2).fill(Utils.hsl_vals_to_hex(hue2, saturation2, lightness2)).loop(null, true);
-};
-
-Patterns.red_fade = (function() {
+Patterns.throb = function throb() {
+  const shape = this;
   // Time to fade from color to black.
-  var transition_ms = 1000;
+  const transitionMS = Math.floor(Math.random() * 5000) + 1000;
+  // time before repeating the next cycle.
+  const transitionMS2 = Math.floor(Math.random() * 5000) + 1000;
   // randomish HSLa values.
-  var hue = 10, saturation = 100, lightness = 50;
-  var pattern = [
+  const hue = Math.floor(((Math.random() * 40) - 20) + (Math.floor(Math.random() * 360)));
+  const saturation = Math.floor(Math.random() * 90) + 10;
+  const lightness = Math.floor(Math.random() * 90) + 10;
+  const hue2 = Math.floor(((Math.random() * 40) - 20) + (Math.floor(Math.random() * 360)));
+  const saturation2 = Math.floor(Math.random() * 90) + 10;
+  const lightness2 = Math.floor(Math.random() * 90) + 10;
+  shape.shape_path.finish()
+    .animate(transitionMS)
+    .fill(Utils.hslValsToHex(hue, saturation, lightness))
+    .animate(transitionMS2)
+    .fill(Utils.hslValsToHex(hue2, saturation2, lightness2))
+    .loop(null, true);
+};
+
+Patterns.redFade = (function redFade() {
+  // Time to fade from color to black.
+  const transitionMS = 1000;
+  // randomish HSLa values.
+  const hue = 10;
+  const saturation = 100;
+  const lightness = 50;
+  const pattern = [
     {
       methods: [
         ['opacity', [1]],
-        ['fill', [Utils.hsl_vals_to_hex(hue, saturation, lightness)]]
-      ]
+        ['fill', [Utils.hslValsToHex(hue, saturation, lightness)]],
+      ],
     },
     {
       animate: {
-        duration: transition_ms,
-        ease: '<'
+        duration: transitionMS,
+        ease: '<',
       },
       methods: [
         ['opacity', [0]],
-        ['scale', [0.7, 0.7]]
-      ]
-    }
+        ['scale', [0.7, 0.7]],
+      ],
+    },
   ];
   return pattern;
-})();
+}());
 
-Patterns.blue_fade = (function() {
+Patterns.blueFade = (function blueFade() {
   // Time to fade from color to black.
-  var transition_ms = 1000;
+  const transitionMS = 1000;
   // randomish HSLa values.
-  var hue = 197, saturation = 100, lightness = 50;
-  var pattern = [
+  const hue = 197;
+  const saturation = 100;
+  const lightness = 50;
+  const pattern = [
     {
       methods: [
         ['opacity', [0]],
-        ['fill', [Utils.hsl_vals_to_hex(hue, 10, lightness)]]
-      ]
+        ['fill', [Utils.hslValsToHex(hue, 10, lightness)]],
+      ],
     },
     {
       animate: {
         duration: 300,
-        ease: '>'
+        ease: '>',
       },
       methods: [
         ['opacity', [1]],
-        ['fill', [Utils.hsl_vals_to_hex(hue, saturation, lightness)]]
-      ]
+        ['fill', [Utils.hslValsToHex(hue, saturation, lightness)]],
+      ],
     },
     {
       animate: {
-        duration: transition_ms,
-        ease: '<'
+        duration: transitionMS,
+        ease: '<',
       },
       methods: [
         ['opacity', [0]],
         ['scale', [0.5, 0.5]],
-        ['fill', [Utils.hsl_vals_to_hex(hue, 10, lightness)]]
-      ]
-    }
+        ['fill', [Utils.hslValsToHex(hue, 10, lightness)]],
+      ],
+    },
   ];
   return pattern;
-})();
+}());
 
-Patterns.kitty_fade = (function() {
-  var kitty = require("images/kitty.jpg");
+
+Patterns.blueGreyFade = (function blueGreyFade() {
   // Time to fade from color to black.
-  var transition_ms = 1000;
+  const transitionMS = 1000;
   // randomish HSLa values.
-  var hue = 10, saturation = 100, lightness = 50;
-  var pattern = [
+  const hue = 197;
+  const saturation = 30;
+  const lightness = 30;
+  const pattern = [
     {
       methods: [
-        ['opacity', [1]],
-        ['fill', [kitty]]
-      ]
+        ['opacity', [0]],
+        ['fill', [Utils.hslValsToHex(hue, 10, lightness)]],
+      ],
     },
     {
       animate: {
-        duration: transition_ms,
-        ease: '<'
+        duration: 300,
+        ease: '>',
       },
       methods: [
-        ['opacity', [0]]
-      ]
-    }
+        ['opacity', [1]],
+        ['fill', [Utils.hslValsToHex(hue, saturation, lightness)]],
+      ],
+    },
+    {
+      animate: {
+        duration: transitionMS,
+        ease: '<',
+      },
+      methods: [
+        ['opacity', [0]],
+        ['scale', [0.5, 0.5]],
+        ['fill', [Utils.hslValsToHex(hue, 10, lightness)]],
+      ],
+    },
   ];
   return pattern;
-})();
+}());
 
-Patterns.pinktile_fade = (function() {
-  var pinktile = require("images/pinktile.jpg");
+Patterns.kittyFade = (function kittyFade() {
   // Time to fade from color to black.
-  var transition_ms = 1000;
-  // randomish HSLa values.
-  var hue = 10, saturation = 100, lightness = 50;
-  var pattern = [
+  const transitionMS = 1000;
+  const pattern = [
+    {
+      methods: [
+        ['opacity', [1]],
+        ['fill', [kitty]],
+      ],
+    },
+    {
+      animate: {
+        duration: transitionMS,
+        ease: '<',
+      },
+      methods: [
+        ['opacity', [0]],
+      ],
+    },
+  ];
+  return pattern;
+}());
+
+Patterns.pinktileFade = (function pinktileFade() {
+  // Time to fade from color to black.
+  const transitionMS = 1000;
+  const pattern = [
     {
       methods: [
         ['opacity', [0.5]],
-        ['fill', [pinktile]]
-      ]
+        ['fill', [pinktile]],
+      ],
     },
     {
       animate: {
-        duration: transition_ms,
-        ease: '<'
+        duration: transitionMS,
+        ease: '<',
       },
       methods: [
-        ['opacity', [0]]
-      ]
-    }
+        ['opacity', [0]],
+      ],
+    },
   ];
   return pattern;
-})();
+}());
 
-Patterns.pinktile_invert_fade = (function() {
-  var pinktile_invert = require("images/pinktile_invert.jpg");
+Patterns.pinktileInvertFade = (function pinktileInvertFade() {
   // Time to fade from color to black.
-  var transition_ms = 1000;
-  // randomish HSLa values.
-  var hue = 10, saturation = 100, lightness = 50;
-  var pattern = [
+  const transitionMS = 1000;
+  const pattern = [
     {
       methods: [
         ['opacity', [1]],
-        ['fill', [pinktile_invert]]
-      ]
+        ['fill', [pinktileInvert]],
+      ],
     },
     {
       animate: {
-        duration: transition_ms,
-        ease: '<'
+        duration: transitionMS,
+        ease: '<',
       },
       methods: [
-        ['opacity', [0]]
-      ]
-    }
+        ['opacity', [0]],
+      ],
+    },
   ];
   return pattern;
-})();
+}());
 
 export default Patterns;
