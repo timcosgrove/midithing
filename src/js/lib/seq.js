@@ -172,7 +172,6 @@ Seq.wave = function wave(
   lightSegment(backward ? whichWave.length - 1 : 0);
 };
 
-
 Seq.loop = function loop(seq) {
   seq.call();
   const interval = Math.floor(Math.random() * 5000);

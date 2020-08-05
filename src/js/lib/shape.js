@@ -87,4 +87,3 @@ Shape.prototype.setPattern = function setPattern(options) {
 };
 
 export default Shape;
-

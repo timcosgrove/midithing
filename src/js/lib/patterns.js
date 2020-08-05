@@ -128,7 +128,6 @@ Patterns.blueFade = (function blueFade() {
   return pattern;
 }());
 
-
 Patterns.blueGreyFade = (function blueGreyFade() {
   // Time to fade from color to black.
   const transitionMS = 1000;

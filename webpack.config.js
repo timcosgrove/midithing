@@ -17,10 +17,10 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
-    port: 9000
+    port: 9876
   },
   plugins: [new HtmlWebpackPlugin({
-      title: 'OMG Glass',
+      title: 'Grid glass backdrop',
       filename: '../index.html'
     })],
   module: {
